@@ -18,14 +18,14 @@ public class Biblioteca {
     }
 
     //buscar un libro
-    public Libro buscarLibro(Libro libroBuscado) {
+    public Libro buscarLibro(String nombreBuscado) {
         for (Libro libro : listaLibros) {
-            if (libro.getNombre().equals(libroBuscado.getNombre())) {
+            if (libro.getNombre().equalsIgnoreCase(nombreBuscado)) {
                 return libro;
+            }
         }
+        return null;
     }
-    return null; 
-}
 
     //eliminar libro
     public void eliminarLibro(Libro libroAEliminar) {
@@ -41,7 +41,7 @@ public class Biblioteca {
 
     //modificar un libro por nombre
     public void modificarLibroPorNombre(Libro libroAModificar, String nombre, String autor, int isbn) {
-        Libro libro = buscarLibro(libroAModificar);
+        Libro libro = buscarLibro(libroAModificar.getNombre());
         if (libro != null) {
             libro.setNombre(nombre);
             libro.setAutor(autor);
@@ -79,7 +79,7 @@ public class Biblioteca {
             }
         }
     }
-
+    //ordenar libros
     public void ordenarLibros() {
     Collections.sort(listaLibros, new Comparator<Libro>() {
 
@@ -89,8 +89,8 @@ public class Biblioteca {
     });
     System.out.println("Los libros han sido ordenados alfabéticamente.");
 }
-
-public void mostrarMenu() {
+    //mostrar menú de biblioteca
+    public void mostrarMenu() {
     int opcion;
     do {
         System.out.println("---- Menú de Biblioteca ----");
@@ -105,7 +105,94 @@ public void mostrarMenu() {
         opcion = sc.nextInt();
         sc.nextLine(); 
 
+        switch (opcion) {
+            case 1:
+                    System.out.println("- Ingrese el nombre del libro: ");
+                    String nombre = sc.nextLine();
+                    System.out.println("- Ingrese el nombre del autor: ");
+                    String autor = sc.nextLine();
+                    System.out.println("Ingrese el número de ISBN: ");
+                    int isbn = sc.nextInt();
+                    sc.nextLine();
+
+                    Libro newLibro = new Libro(nombre, autor, isbn);
+                    agregarLibro(newLibro);
+                    System.out.println("- Libro agregado correctamente.");
+                break;
+            case 2:
+                    System.out.println("- Ingrese el nombre del libro que desea buscar: ");
+                    String nomLibroBuscado = sc.nextLine();
+                    Libro libroEncontrado = buscarLibro(nomLibroBuscado);
+                    if (libroEncontrado != null) {
+                        System.out.println("Libro encontrado: " + libroEncontrado);
+                    } else {
+                    System.out.println("El libro no fue encontrado."); }
+                    break;
+            case 3:
+                    System.out.println("Ingrese el nombre del libro que desea eliminar: ");
+                    String nomLibroEliminar = sc.nextLine();
+                    Libro libroAEliminar = buscarLibro(nomLibroEliminar);
+                    if (libroAEliminar != null) {
+                        eliminarLibro(libroAEliminar);
+                    } else {
+                        System.out.println("No se ha encontrado el libro.");
+                    }
+                    break;
+            case 4:
+                    System.out.println("- Ingrese el medio por el cual desea modificar el libro: ");
+                    System.out.println("1. Modificar por nombre ");
+                    System.out.println("2. Modificar por índice ");
+                    System.out.println("- Seleccione una opción: ");
+                    int option = sc.nextInt();
+                    sc.nextLine();
+
+                    switch (option) {
+                        case 1:
+                                System.out.println("- Ingrese el nombre del libro que desea modificar: ");
+                                String nomLibro = sc.nextLine();
+                                Libro libroAModif = buscarLibro(nomLibro);
+                                if (libroAModif != null) {
+                                    System.out.println("Ingrese el nuevo nombre del libro: ");
+                                    String newNombre = sc.nextLine();
+                                    System.out.println("Ingrese el nuevo nombre de autor: ");
+                                    String newAutor = sc.nextLine();
+                                    System.out.println("Ingrese el nuevo ISBN: ");
+                                    int newISBN = sc.nextInt();
+                                    sc.nextLine();
+                                        
+                                    modificarLibroPorNombre(libroAModif, newNombre, newAutor, newISBN);
+                                }
+                                break;
+                        case 2:
+                                System.out.println("- Ingrese el N° de índice del libro que desea modificar: ");
+                                int indice = sc.nextInt();
+                                sc.nextLine();
+                                System.out.println("Ingrese el nuevo nombre del libro: ");
+                                String nNombre = sc.nextLine();
+                                System.out.println("Ingrese el nuevo nombre de autor: ");
+                                String nAutor = sc.nextLine();
+                                System.out.println("Ingrese el nuevo ISBN: ");
+                                int nISBN = sc.nextInt();
+                                sc.nextLine();
+                                modificarLibroPorIndice(indice, nNombre, nAutor, nISBN);
+                                break;
+
+                        default:
+                                System.out.println("Opción no válida, intente nuevamente.");
+                                break;
+                        }
+                    break;
+            case 5:
+                    ordenarLibros();
+                    break;
+            case 6: 
+                    listarLibros();
+                    break;
+            default:
+                    break;
+            }
         
-    } while (opcion != 0);
-}
-}
+        } while (opcion != 0);
+        sc.close();
+    }
+    }
